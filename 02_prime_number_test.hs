@@ -31,12 +31,18 @@
 -- 2. If n > 1 and n is not a prime number, then LD(n)^2 <= n
 --    proof: suppose that n > 1 is not prime and that p = LD(n),
 --    then there is a natural number a > 1 with n = p * a // e.g. 16 = 2 * 8
+--    (i.e. there is another number that is the "partner" to our LD)
 --    thus, a divides n.
 --    since p is our LD(n) > 1, we have that p <= a
 --    and therefore p^2 <= p * a
 --    i.e. LD(n)^2 <= n
 
+-- we create a helper function for the divisibility test
+
 divides d n = rem n d == 0
+
+-- and a helper function for the LD from a certain starting number
+-- (e.g. LD(8) starting from 2)
 
 ldf k n | divides k n = k
         | k^2 > n     = n
@@ -49,3 +55,22 @@ ldf k n | divides k n = k
 
 ld n = ldf 2 n
 
+-- however, my preference for ldf would be:
+
+ldf_ k n | k == n      = k
+         | k > n       = error "k is greater than n"
+         | divides k n = k
+         | otherwise   = ldf_ (k+1) n
+
+-- as this is more accurate when used alone (e.g. ldf_ 3 8 returns 4)
+-- but appreciate it's less relevant to our prime number test
+
+-- exercise 1.4: what if the second condition in ldf was `k^2 >= n`?
+-- answer: this would make no difference because if k^2 == n then the
+-- first condition in ldf would evaluate to true
+
+-- we now create the prime test function
+
+prime0 n | n < 1     = error "not a positive integer"
+         | n == 1    = False
+         | otherwise = ld n == n
