@@ -9,4 +9,5 @@
 -- `a` ranges over various types
 
 -- Integral is the class consisting of `Int` (fixed precision)
--- and `Integer` (arbitray precision)
+-- and `Integer` (arbitray precision - storage allocated for the
+-- object depends on the size of the object)
