@@ -25,11 +25,11 @@ mxmInt (x:xs) = max x (mxmInt xs)
 
 -- first solution:
 
-removeFst :: Int -> [Int] -> [Int]
-removeFst m [] = error "empty list"
-removeFst m [x] | m == x = []
+removeFst_ :: Int -> [Int] -> [Int]
+removeFst_ m [] = error "empty list"
+removeFst_ m [x] | m == x = []
                 | otherwise = [x]
-removeFst m (x:xs) | m == x = xs
+removeFst_ m (x:xs) | m == x = xs
                    | otherwise = x : (removeFst m xs)
 
 -- notes/corrections:
@@ -37,6 +37,31 @@ removeFst m (x:xs) | m == x = xs
 --    then we don't need to explicitly handle the cases where there is one
 --    element remaining in the list and it either matches `m` or it doesn't
 
-removeFst_ m [] = []
-removeFst_ m (x:xs) | m == x = xs
-                    | otherwise = x : (removeFst m xs)
+removeFst :: Int -> [Int] -> [Int]
+removeFst m [] = []
+removeFst m (x:xs) | m == x = xs
+                   | otherwise = x : (removeFst m xs)
+
+-- example: using mnmInt and removeFst to sort a list of integers in order of
+-- increasing size
+
+srtInts :: [Int] -> [Int]
+srtInts [] = []
+srtInts xs = m : (srtInts (removeFst m xs)) where m = mnmInt xs
+
+-- notes from this example:
+-- 1. we can refer to the entire list argument as expected (`xs`) rather than
+--    always using the `(x:xs)` syntax to pop the first element
+-- 2. we are setting `m` to be equal to smallest integer in the list here -
+--    assume that m is a ref to an integer not to the element in the list
+-- 3. this means we then need to use removeFst to modify the list
+
+-- for educational purposes, we can write our own versions of sum and length:
+
+sum_ :: [Int] -> Int
+sum_ [] = 0
+sum_ (x:xs) = x + sum_ xs
+
+length_ :: [Int] -> Int
+length_ [] = 0
+length_ (x:xs) = 1 + length_ xs
