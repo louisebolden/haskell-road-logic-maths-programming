@@ -62,6 +62,20 @@ sum_ :: [Int] -> Int
 sum_ [] = 0
 sum_ (x:xs) = x + sum_ xs
 
-length_ :: [Int] -> Int
+length_ :: [a] -> Int
 length_ [] = 0
 length_ (x:xs) = 1 + length_ xs
+
+-- example of using toRational, in a function for finding the average
+-- (because the division operator requires Rational operands in Haskell)
+
+average :: [Int] -> Rational
+average xs = toRational (sum xs) / toRational (length xs)
+
+-- exercise 1.13: write a function for counting the number of occurences
+-- of a character in a string
+
+count :: Char -> String -> Int
+count c [] = 0
+count c (x:xs) | c == x = 1 + (count c xs)
+               | otherwise = count c xs
