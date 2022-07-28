@@ -7,9 +7,14 @@
 -- then `rem` is of type `a -> a -> a`
 
 -- `a` ranges over various types
+-- `[a]` is a "type scheme" rather than a type
 
 -- Integral is the class consisting of `Int` (fixed precision)
 -- and `Integer` (arbitray precision - storage allocated for the
 -- object depends on the size of the object)
 
 -- Fractional is a class that contains the Rational type
+
+-- The type `[Char]` is abbreviated as `String` i.e. a string is a list of chars
+-- so we might have ['a', 'b', 'c'] or "abc" (notice the different quotes used)
+
