@@ -79,3 +79,24 @@ count :: Char -> String -> Int
 count c [] = 0
 count c (x:xs) | c == x = 1 + (count c xs)
                | otherwise = count c xs
+
+-- exercise 1.14: write a function that duplicates each character in a string
+-- e.g. "abc" becomes "aabbcc"
+
+blowup :: String -> String
+blowup [] = ""
+blowup (x:xs) = [x] ++ [x] ++ blowup xs
+
+-- exercise correction: the requirement is to duplicate each letter c_i
+-- (i+1) times, e.g. "abc" becomes "abbccc"
+
+duplicateChar :: Char -> Int -> String
+duplicateChar c n | n < 2 = [c]
+                  | otherwise = [c] ++ (duplicateChar c (n - 1))
+
+strExpander :: String -> Int -> String
+strExpander [] n = ""
+strExpander (x:xs) n = duplicateChar x n ++ (strExpander xs (n + 1))
+
+blowup2 :: String -> String
+blowup2 str = strExpander str 1
