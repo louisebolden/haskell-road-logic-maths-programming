@@ -100,3 +100,25 @@ strExpander (x:xs) n = duplicateChar x n ++ (strExpander xs (n + 1))
 
 blowup2 :: String -> String
 blowup2 str = strExpander str 1
+
+-- exercise 1.15: write a function that sorts a list of strings in alphabetical
+-- order
+
+-- first, generalise the functions used by srtInts (removeFst and mnmInt)
+
+removeFstAny :: Eq a => a -> [a] -> [a]
+removeFstAny element [] = []
+removeFstAny element (x:xs) | x == element = xs
+                            | otherwise = x : (removeFstAny element xs)
+
+mnmAny :: Ord a => [a] -> a
+mnmAny [] = error "empty list"
+mnmAny [x] = x
+mnmAny (x:xs) = min x (mnmAny xs)
+
+-- now can use in our srtString function
+
+srtString :: [String] -> [String]
+srtString [] = []
+srtString [x] = [x]
+srtString xs = m : (srtString (removeFstAny m xs)) where m = mnmAny xs
