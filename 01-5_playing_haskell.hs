@@ -122,3 +122,59 @@ srtString :: [String] -> [String]
 srtString [] = []
 srtString [x] = [x]
 srtString xs = m : (srtString (removeFstAny m xs)) where m = mnmAny xs
+
+-- example 1.16: the function `prefix` returns true or false, depending on
+-- whether the first string argument is a prefix of the second string argument.
+
+-- prefixes of a string `ys` are defined as follows:
+
+-- 1. `[]` is a prefix of `ys`
+
+-- 2. if `xs` is a prefix of `ys`, then `x:xs` is a prefix of `x:ys`
+--    (if "yep" is a prefix of "yeppers", then "ep" is a prefix of "eppers"
+--    OR if "yep" is prefix of "yeppers", then "ayep" is prefix of "ayeppers"?
+--    uncertain of meaning of `x:xs` and `x:ys` here)
+
+-- 3. nothing else is a prefix of `ys`
+--    (this just means no further checks needed?)
+
+-- the following code implements this definition:
+
+prefix :: String -> String -> Bool
+prefix [] ys = True
+-- prefix (x:xs) [] = False
+-- (the above line was given but the below also works?)
+prefix xs [] = False
+prefix (x:xs) (y:ys) = x == y && prefix xs ys
+
+-- exercise 1.17: write a function that checks whether string1 is a substring
+-- of string2.
+-- the substrings of an arbitrary string `ys` are given by:
+-- 1. if `xs` is a prefix of `ys`, `xs` is a substring of `ys`
+-- 2. if ys equals y:ys' and xs is a substring of ys', xs is a substring of ys
+--    (if ys = "ep" and xs is substring of "yep", xs is substring of "ep" (??)
+--    OR if ys = "ayep" and xs is substr of "yep", xs is a substr of "ayep"
+--    ... only the latter interpreation is true?)
+-- 3. nothing else is a substring of ys
+
+substring :: String -> String -> Bool
+substring [] ys = True
+substring xs [] = False
+substring xs (y:ys) = prefix xs (y:ys) || substring xs ys
+
+-- the provided solution:
+
+substring_ :: String -> String -> Bool
+substring_ [] ys = True
+substring_ (x:xs) [] = False
+substring_ (x:xs) (y:ys) = ((x==y) && (prefix xs ys)) || (substring_ (x:xs) ys)
+
+-- I believe the only meaningful difference here is in the final line, and in my
+-- opinion there is no need to check x == y before calling (prefix xs ys) as
+-- calling (prefix xs (y:ys)) accomplishes the same result, e.g.:
+-- substring_ "yep" "yeppers -> 'y' == 'y' && prefix "ep" "eppers" is true
+-- substring "yep" "yeppers" -> prefix "yep" "yeppers" is true
+-- there is no need for the initial check of the first letters being identical.
+-- perhaps the aim is efficiency in not calling prefix unless two characters in
+-- the strings are found to be equal? but prefix also stops & returns False as
+-- soon as two characters are found to be unequal.
