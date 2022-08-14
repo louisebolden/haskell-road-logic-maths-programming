@@ -36,6 +36,9 @@
 --    since p is our LD(n) > 1, we have that p <= a
 --    and therefore p^2 <= p * a
 --    i.e. LD(n)^2 <= n
+--    (the case where p = a, p^2 = p * a and LD(n)^2 = n applies to
+--    all square numbers only? i.e. where one of the factors' "partner"
+--    is itself, e.g. 3 as a factor of 9 or 4 as a factor of 16)
 
 -- we create a helper function for the divisibility test
 
