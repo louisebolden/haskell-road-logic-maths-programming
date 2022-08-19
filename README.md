@@ -11,7 +11,7 @@ To compile and/or run these programs on a Mac:
 3. Compile any program with `stack ghc [filename].hs`
 4. Run any program to view its output with `stack runghc -- [filename].hs -o x`
 
-You can also define functions in a file and enter `:load [filename]` in the interpreter (note: exclude file extension).
+You can also define functions in a file and enter `:load [filename]` in the interpreter.
 
 You're then able to call the function(s) in your interpreter.
 
