@@ -24,4 +24,65 @@ mapExample = map (^2) [1,2,3,4,5]
 
 -- thus `2^10` can also be written as `(^) 2 10`
 
+mapExample2 = map (2^) [1..10]
+
+-- exercise 1.20: use `map` to write a function `lengths` that takes a list
+-- of lists and returns a list of the corresponding list lengths
+
+lengths :: [[a]] -> [Int]
+lengths [] = []
+lengths (x:xs) = length x : lengths xs
+
+-- oops, supposed to use `map`:
+
+lengths_ :: [[a]] -> [Int]
+lengths_ [] = []
+lengths_ xs = map length xs
+
+-- from the provided answers:
+lengths__ :: [[a]] -> [Int]
+lengths__ = map length
+-- no need for special handling of empty array case
+-- and apparently can pass the arg to `length` implictly!
+
+-- exercise 1.21: use `map` to write a function `sumLengths` that takes a list
+-- of lists and returns the sum of their lengths
+
+sumLengths :: [[a]] -> Int
+sumLengths [] = 0
+sumLengths (x:xs) = l + (sumLengths xs) where l = length x
+
+-- once again, rewrite to use `map`:
+
+sumLengths_ :: [[a]] -> Int
+sumLengths_ xs = sum (map length xs)
+
+-- we can make an infinite list of primes using `filter`
+
+-- first, redefine required functions that we created in earlier files
+
+divides d n = rem n d == 0
+
+ldf_ k n | k == n      = k
+         | k > n       = error "k is greater than n"
+         | divides k n = k
+         | otherwise   = ldf_ (k+1) n
+
+ld n = ldf_ 2 n
+
+prime0 n | n < 1     = error "not a positive integer"
+         | n == 1    = False
+         | otherwise = ld n == n
+
+-- now we can have...
+
+primes0 :: [Integer] -- no args; define output type only
+primes0 = filter prime0 [2..]
+
+-- (press ctrl+c to stop :)
+
+-- now we can improve our `ld` function because, in searching for the lowest
+-- divisor of `n`, there is no need to check composite divisors; if 2 does not
+-- divide `n` then neither will 4 or any other multiple of 2
+
 
