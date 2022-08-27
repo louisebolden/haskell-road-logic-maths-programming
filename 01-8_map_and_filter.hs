@@ -85,4 +85,34 @@ primes0 = filter prime0 [2..]
 -- divisor of `n`, there is no need to check composite divisors; if 2 does not
 -- divide `n` then neither will 4 or any other multiple of 2
 
+lpd :: Integer -> Integer
+lpd n = lpdf primes1 n
 
+-- lpdf will take a list of primes to check against n
+lpdf :: [Integer] -> Integer -> Integer
+lpdf (p:ps) n | rem n p == 0 = p -- we found the lowest prime divisor
+              | p^2 > n      = n -- we found that n is prime/is its own lpd
+              | otherwise    = lpdf ps n
+
+primes1 :: [Integer]
+primes1 = 2: filter prime [3..]
+
+-- find if n is prime by seeing if it is its own lowest prime divisor
+prime :: Integer -> Bool
+prime n | n < 1     = error "not a positive integer"
+        | n == 1    = False
+        | otherwise = lpd n == n
+
+-- note the circularity of references between the functions above!
+-- (lpd calls primes1; primes1 calls prime; prime calls lpd)
+-- if we change the definition of primes1 to:
+-- primes1 = filter prime [2..]
+-- ...then we get a stack overflow because in this case:
+-- lpd 2
+--   calls   lpdf primes1 2
+--   i.e.    lpdf (filter prime [2..]) 2
+--   i.e.    lpdf (filter (lpd 2 == 2) 2)
+-- (wip: there's an issue between the above two lines; `filter prime [2..]`
+-- checks every integer in that list to see whether `lpd n == n` which I think
+-- means lpd is generating a new infinite list of primes each time...? not sure
+-- yet why excluding 2 from the filtering solves the stack overflow)
