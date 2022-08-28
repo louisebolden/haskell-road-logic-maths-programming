@@ -107,12 +107,19 @@ prime n | n < 1     = error "not a positive integer"
 -- (lpd calls primes1; primes1 calls prime; prime calls lpd)
 -- if we change the definition of primes1 to:
 -- primes1 = filter prime [2..]
--- ...then we get a stack overflow because in this case:
--- lpd 2
---   calls   lpdf primes1 2
---   i.e.    lpdf (filter prime [2..]) 2
---   i.e.    lpdf (filter (lpd 2 == 2) 2)
--- (wip: there's an issue between the above two lines; `filter prime [2..]`
--- checks every integer in that list to see whether `lpd n == n` which I think
--- means lpd is generating a new infinite list of primes each time...? not sure
--- yet why excluding 2 from the filtering solves the stack overflow)
+-- then we get a stack overflow because...
+-- "to make [a] function [that iterates over an infinite list] start returning
+-- data before evaluating completely (which it can never do), you need to first
+-- return the non-recursive cases, and then append the recursive cases to them
+-- https://stackoverflow.com/a/47679271/8523272
+-- so here we need to return a first value from the `lpdf` function before we
+-- start iterating over the infinite list of primes > 3 in `primes1`
+-- what if we had:
+-- primes1 = filter prime [3..]
+-- this results in stack overflow, too
+-- presumably `filter prime [3..]` runs forever once `primes1` is called?
+-- ah yes - changing `primes1` to:
+-- primes1 = [2..]
+-- does not cause stack overflow
+-- so somewhere in the recursion of lpdf over the filtering of an infinite list
+-- lies the stack overflow problem
