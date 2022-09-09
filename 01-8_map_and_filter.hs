@@ -85,8 +85,8 @@ primes0 = filter prime0 [2..]
 -- divisor of `n`, there is no need to check composite divisors; if 2 does not
 -- divide `n` then neither will 4 or any other multiple of 2
 
-lpd :: Integer -> Integer
-lpd n = lpdf primes1 n
+-- lpd :: Integer -> Integer
+-- lpd n = lpdf primes1 n
 
 -- lpdf will take a list of primes to check against n
 lpdf :: [Integer] -> Integer -> Integer
@@ -121,5 +121,30 @@ prime n | n < 1     = error "not a positive integer"
 -- ah yes - changing `primes1` to:
 -- primes1 = [2..]
 -- does not cause stack overflow
--- so somewhere in the recursion of lpdf over the filtering of an infinite list
--- lies the stack overflow problem
+
+-- exercise 1.24: what happens when you modify the defining equation of `ldp`
+-- as follows:
+lpd :: Integer -> Integer
+lpd = lpdf primes1
+
+-- my initial guess was an error as `lpdf primes1` seems to be missing the second
+-- argument for `lpdf` ... but this seems incorrect.
+-- perhaps haskell will automatically append the argument included in the type
+-- definition to the end of the LHS & RHS of the function definition?
+
+testFn :: Integer -> Integer
+testFn = (4*)
+
+-- yes, it would seem so! what about...
+
+testFn_ :: Integer -> Integer
+testFn_ = (*4)
+
+-- this seems to work as expected, too :)
+
+-- the answer given almost makes it sound like we can cancel `n` from both sides!
+
+-- "The final argument n in the definition can be left out, for saying that ldp
+-- is the function that results from applying ldpf to primes1 is equivalent to
+-- saying that ldp is the function that for any argument n does the same as what
+-- (ldpf primes1) does for argument n."
